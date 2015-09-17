@@ -1,4 +1,4 @@
-package pucrs.cg1.tiro;
+package pucrs.cg1.tiro.object;
 
 public enum GameObjectType {
 

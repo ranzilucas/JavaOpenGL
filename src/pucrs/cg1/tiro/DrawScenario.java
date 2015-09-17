@@ -16,10 +16,10 @@ class DrawScenario {
     // desenha eixos X e Y
     public static void drawLines(GL2 gl) {
         gl.glBegin(GL_LINE_LOOP);
-        gl.glVertex2d(-2.5, 2.0f);
-        gl.glVertex2d(-2.5f, -2.0f);
-        gl.glVertex2d(2.5f, -2.0f);
-        gl.glVertex2d(2.5f, 2.0f);
+        gl.glVertex2d(-3, 2.0f);
+        gl.glVertex2d(-3f, -2.0f);
+        gl.glVertex2d(3f, -2.0f);
+        gl.glVertex2d(3f, 2.0f);
         gl.glEnd();
     }
 

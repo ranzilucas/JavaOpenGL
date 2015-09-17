@@ -6,17 +6,18 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
+import pucrs.cg1.tiro.object.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.jogamp.opengl.GL.*;
+import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
+import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
 import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
 import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
-
-//import pucrs.cg1.dodge.GameObject;
-//import pucrs.cg1.dodge.GameObjectType;
 
 public class TiroGame extends GLCanvas implements GLEventListener {
 
@@ -24,23 +25,43 @@ public class TiroGame extends GLCanvas implements GLEventListener {
     private static final int CANVAS_HEIGHT = 600; // altura janela
     private static final int FPS = 60;
 
-    private GLU glu;
+    static ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 
-    //static float ballSpeed = 0.07f;
-    //static ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
-
-    static private GameObject ballGame;
+    static float gunSpeed = 0.07f;
 
     static int score = 0;
 
     static int dificulty = 10;
 
     static int timeAdd = 500;
-
     static Timer timerMoveObject;
     static Timer timerAddObject;
+
     static boolean move = true;
 
+    static ActionListener actionMove = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            for (int i = 0; i < gameObjects.size(); i++)
+                gameObjects.get(i).move();
+        }
+    };
+
+    static ActionListener actionAddForm = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (gameObjects.size() < 15)
+                gameObjects.add(RandomObject.getObjectRandom());
+        }
+    };
+
+    static private Gun gun;
+    private GLU glu;
+
+    public TiroGame() {
+        this.addGLEventListener(this);
+        gun = new Gun(GameObjectType.GUN, getPositions(), -1, 0f, -2.0f, 0.0f, 0.0f, 1.0f);// Criar o canhao
+        TimerActionMove(17);
+        TimerActionAddGameObject(0);
+    }
 
     public static void main(String[] args) {
 
@@ -91,21 +112,12 @@ public class TiroGame extends GLCanvas implements GLEventListener {
                                 System.exit(0);
                             switch (key.getKeyCode()) {
                                 case 37:// Left
-                                    //if (ballGame.getTx() - ballGame.getRay() > -2.4f)
-                                    //		ballGame.addTx(-ballSpeed);
-                                    break;
-                                case 38:// Up
-                                    //	if (ballGame.getTy() + ballGame.getRay() < 2.4f)
-                                    //		ballGame.addTy(ballSpeed);
+                                    if (gun.getTx() > -2.8f)
+                                        gun.setTx(gun.getTx() - gunSpeed);
                                     break;
                                 case 39:// Right
-                                    //	if (ballGame.getTx() + ballGame.getRay() < 2.4f)
-                                    //		ballGame.addTx(ballSpeed);
-                                    break;
-                                case 40:// Down
-
-                                    //	if (ballGame.getTy() - ballGame.getRay() > -2.4f)
-                                    //		ballGame.addTy(-ballSpeed);
+                                    if (gun.getTx() < 2.8f)
+                                        gun.setTx(gun.getTx() + gunSpeed);
                                     break;
                                 default:
                                     break;
@@ -130,14 +142,6 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         timerMoveObject.start();
     }
 
-    static ActionListener actionMove = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            //for (int i = 0; i < gameObjects.size(); i++)
-            //	gameObjects.get(i).move(ballGame.getTx() + ballGame.getX(),
-            //			ballGame.getTy() + ballGame.getY());
-        }
-    };
-
     // gera objetos em intervalo de tempo especificado
     public static void TimerActionAddGameObject(int sec) {
         if (timeAdd - sec > 0)
@@ -146,120 +150,14 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         timerAddObject.start();
     }
 
-    static ActionListener actionAddForm = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            //if (gameObjects.size() < 25) {
-            //	GameObject f = new GameObject();
-            //		gameObjects.add(f);
-            //		}
-        }
-    };
+    public List<XY> getPositions() {
+        List<XY> xyList = new ArrayList<XY>();
 
-    public TiroGame() {
-        this.addGLEventListener(this);
-        // Cria instancia bola do jogador
-        //	ballGame = new GameObject(GameObjectType.CIRCLE, 0.0f, 0.0f, 0.15f, -1);
-        TimerActionMove(17);
-        TimerActionAddGameObject(0);
-        //	gameObjects.add(new GameObject());
-    }
-
-    // metodo responsavel por desenhar circulos
-    private void drawBall(float cx, float cy, float r, GL2 gl) {
-        gl.glBegin(GL_LINE_LOOP);
-        for (int i = 0; i < 360; i++) {
-            float theta = 2.0f * 3.1415926f * i / 360;
-            float x = (float) (r * Math.cos(theta));
-            float y = (float) (r * Math.sin(theta));
-            gl.glVertex3f(x + cx, y + cy, 0);
-        }
-        gl.glEnd();
-    }
-
-
-    // desenha todas as formas da lista de objetos
-    private void drawForms(GL2 gl) {
-        /*for (int i = 0; i < gameObjects.size(); i++) {
-            GameObject f = gameObjects.get(i);
-
-			//detecta colisao
-			if (colisionDetect(f.getTx() + f.getX(), f.getTy() + f.getY(),
-					f.getRay())) {
-				timerMoveObject.stop();
-				timerAddObject.stop();
-				renderer = new TextRenderer(
-						new Font("SansSerif", Font.BOLD, 40));
-				renderer.beginRendering(850, 850);
-				renderer.setColor(1.0f, 0.2f, 0.2f, 0.8f);
-				renderer.draw("Game Over", 320, 425);
-				renderer.endRendering();
-				move = false;
-			}
-			
-			//verifica se objeto esta dentro da janela
-			if (!f.isInside()) {
-				gameObjects.remove(i);
-				score++;
-				if ((score % dificulty) == 0 && score != 0) {
-					dificulty += 10;
-					TimerActionAddGameObject(-500);
-				}
-			} else { //desenha objeto da posicao atual da lista
-				gl.glLoadIdentity();
-				gl.glColor3f(f.getRed(), f.getGreen(), f.getBlue());
-				gl.glTranslatef(f.getTx(), f.getTy(), -6.0f);
-				switch (f.getForm()) {
-				case SQUARE:
-					gl.glBegin(GL_QUADS);
-					gl.glVertex3f(f.getX() - f.getRay(), f.getY() + f.getRay(),
-							0.0f);
-					gl.glVertex3f(f.getX() + f.getRay(), f.getY() + f.getRay(),
-							0.0f);
-					gl.glVertex3f(f.getX() + f.getRay(), f.getY() - f.getRay(),
-							0.0f);
-					gl.glVertex3f(f.getX() - f.getRay(), f.getY() - f.getRay(),
-							0.0f);
-					gl.glEnd();
-					break;
-				case CIRCLE:
-					drawBall(f.getX(), f.getY(), f.getRay(), gl);
-					break;
-				case TRIANGLE:
-					gl.glBegin(GL_TRIANGLES);
-					gl.glVertex3f(f.getX(), f.getY() + f.getRay(), 0.0f);
-					gl.glVertex3f(f.getX() - f.getRay(), f.getY() - f.getRay(),
-							0.0f);
-					gl.glVertex3f(f.getX() + f.getRay(), f.getY() - f.getRay(),
-							0.0f);
-					gl.glEnd();
-					break;
-				case LINE:
-					gl.glBegin(GL_LINES);
-					gl.glVertex2d(f.getX() - f.getRay(), f.getY());
-					gl.glVertex2d(f.getX() + f.getRay(), f.getY());
-					gl.glVertex2d(f.getX(), f.getY() + f.getRay());
-					gl.glVertex2d(f.getX(), f.getY() - f.getRay());
-					gl.glVertex2d(f.getX() - f.getRay()+0.1f, f.getY() + f.getRay()-0.1f);
-					gl.glVertex2d(f.getX() + f.getRay()-0.1f, f.getY() - f.getRay()+0.1f);					
-					gl.glVertex2d(f.getX() - f.getRay()+0.1f, f.getY() - f.getRay()+0.1f);
-					gl.glVertex2d(f.getX() + f.getRay()-0.1f, f.getY() + f.getRay()-0.1f);
-					gl.glEnd();
-					break;
-				default:
-					break;
-				}
-			}
-		}*/
-    }
-
-    // Detecta colisão do circulo jogador com objeto
-    public boolean colisionDetect(float px, float py, float r) {
-        //	float x = (float) Math.pow(ballGame.getTx() - px, 2);
-        //	float y = (float) Math.pow(ballGame.getTy() - py, 2);
-        //	float d = (float) Math.sqrt(x + y);
-        //	if ((ballGame.getRay() + r) >= d)
-        //		return true;
-        return false;
+        xyList.add(new XY(0.2f, 0f));
+        xyList.add(new XY(0.2f, 0.2f));
+        xyList.add(new XY(-0.2f, 0.2f));
+        xyList.add(new XY(-0.2f, 0f));
+        return xyList;
     }
 
     @Override
@@ -273,20 +171,14 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         gl.glTranslatef(0.0f, 0.0f, -6.0f);
         DrawScenario.drawLines(gl);
 
-        // BALL GAME
-        gl.glColor3f(0.0f, 0.0f, 1.0f);
-        gl.glLineWidth(5.0f);
-        //	gl.glTranslatef(ballGame.getTx(), ballGame.getTy(), 0.0f);
-        //	drawBall(ballGame.getX(), ballGame.getY(), ballGame.getRay(), gl);
-        gl.glLineWidth(1.0f);
-        gl.glColor3f(1.0f, 1.0f, 1.0f);
+        // Desenha canhao;
+        DrawObject.draw(gl, gun);
 
         // Desenha objetos obstaculos
-        drawForms(gl);
+        DrawObject.drawForms(gl, gameObjects);
 
         // Desenha Score
         DrawScenario.drawScore(score);
-
     }
 
     // inicia as variaveis opengl e gluOrtho
