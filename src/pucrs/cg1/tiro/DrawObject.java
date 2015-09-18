@@ -19,7 +19,13 @@ class DrawObject {
         boolean move = true;
         for (GameObject f : gameObjects) {
             //detecta colisao
-            move = (move) ? (isColisionObject(timerAddObject, timerMoveObject, gun, f)) : false;
+            if (isColisionObject(gun, f)) {
+                gun.getXy();
+                timerMoveObject.stop();
+                timerAddObject.stop();
+                DrawScenario.drawGameOver();
+                move = false;
+            }
 
             if (!f.isInside()) {
                 f.setTx(f.getTXRandom());
@@ -38,16 +44,20 @@ class DrawObject {
     }
 
     // Detecta colisão do circulo jogador com objeto
-    private static boolean isColisionObject(Timer timerAddObject, Timer timerMoveObject, Gun gun, GameObject f) {
-        if (f.getMaxX() < gun.getMinX() && gun.getMaxX() < f.getMinX())
-            if (f.getMaxY() > gun.getMinY() && gun.getMaxY() > f.getMinY()) {
-                gun.getXy();
-                timerMoveObject.stop();
-                timerAddObject.stop();
-                DrawScenario.drawGameOver();
-                return false;
+    private static boolean isColisionObject(GameObject gun, GameObject f) {
+        if (f.getTy() < 0)
+            if (f.getTx() > 0 && gun.getTx() > 0) {
+                if (f.getMaxX() + f.getTx() < gun.getMinX() + gun.getTx() && gun.getMaxX() + gun.getTx() < f.getMinX() + f.getTx())
+                    if (-f.getMaxY() + f.getTy() < -gun.getMinY() + gun.getTy() && -gun.getMaxY() + gun.getTy() < -f.getMinY() + f.getTy())
+                        return true;
+
+            } else if (f.getTx() < 0 && gun.getTx() < 0) {
+                if (-f.getMaxX() + f.getTx() > -gun.getMinX() + gun.getTx() && -gun.getMaxX() + gun.getTx() > -f.getMinX() + f.getTx())
+                    if (-f.getMaxY() + f.getTy() < -gun.getMinY() + gun.getTy() && -gun.getMaxY() + gun.getTy() < -f.getMinY() + f.getTy())
+                        return true;
             }
-        return true;
+
+        return false;
     }
 
     public static void draw(GL2 gl, GameObject gun) {
