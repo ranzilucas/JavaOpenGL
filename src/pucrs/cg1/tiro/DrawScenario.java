@@ -30,4 +30,13 @@ class DrawScenario {
         renderer.draw("Score: " + score, 700, 800);
         renderer.endRendering();
     }
+
+    public static void drawGameOver() {
+        renderer = new TextRenderer(new Font("SansSerif", Font.BOLD, 40));
+        renderer.beginRendering(850, 850);
+        renderer.setColor(1.0f, 0.2f, 0.2f, 0.8f);
+        renderer.draw("Game Over", 320, 425);
+        renderer.endRendering();
+    }
+
 }

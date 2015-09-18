@@ -175,7 +175,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         DrawObject.draw(gl, gun);
 
         // Desenha objetos obstaculos
-        DrawObject.drawForms(gl, gameObjects);
+        DrawObject.drawForms(gl, gameObjects, timerAddObject, timerMoveObject, gun);
 
         // Desenha Score
         DrawScenario.drawScore(score);
