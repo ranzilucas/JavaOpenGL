@@ -58,7 +58,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
 
     public TiroGame() {
         this.addGLEventListener(this);
-        gun = new Gun(GameObjectType.GUN, getPositions(), -1, 0f, -2.0f, 0.0f, 0.0f, 1.0f);// Criar o canhao
+        gun = new Gun(GameObjectType.GUN, -1, 0f, -2.0f, 0.0f, 0.0f, 1.0f);// Criar o canhao
         TimerActionMove(17);
         TimerActionAddGameObject(0);
     }

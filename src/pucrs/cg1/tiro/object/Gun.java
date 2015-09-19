@@ -8,8 +8,8 @@ import java.util.List;
 public class Gun extends GameObject {
 
 
-    public Gun(GameObjectType form, List<XY> xy, int destiny, float tx, float ty, float red, float green, float blue) {
-        super(form, xy, destiny, tx, ty, red, green, blue);
+    public Gun(GameObjectType form, int destiny, float tx, float ty, float red, float green, float blue) {
+        super(form, destiny, tx, ty, red, green, blue);
     }
 
     public Gun(GameObjectType form, List<XY> xy, int destiny) {

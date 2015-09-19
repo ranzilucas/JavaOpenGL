@@ -1,5 +1,10 @@
 package pucrs.cg1.tiro.object;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -23,15 +28,15 @@ public abstract class GameObject implements GameObjectInterface {
 
     private GameObjectType form;
 
-    public GameObject(GameObjectType form, List<XY> xy, int destiny, float tx, float ty, float red, float green, float blue) {
-        this.xy = xy;
+    public GameObject(GameObjectType type, int destiny, float tx, float ty, float red, float green, float blue) {
         this.tx = tx;
         this.ty = ty;
         this.red = red;
         this.green = green;
         this.blue = blue;
         this.destiny = destiny;
-        this.form = form;
+        this.form = type;
+        this.xy = getPositionsXY(type);
         getMaxMin();
     }
 
@@ -87,6 +92,57 @@ public abstract class GameObject implements GameObjectInterface {
             return false;
         return true;
     }
+
+    public static List<XY> getPositionsXY(GameObjectType type) {
+        String path = null;
+        switch (type) {
+            case ENEMYA:
+                path = "C:/opt/inimigoA.mod";
+                break;
+            case ENEMYB:
+                path = "C:/opt/inimigoA.mod";
+                break;
+            case ENEMYC:
+                path = "C:/opt/inimigoA.mod";
+                break;
+            case ENEMYD:
+                path = "C:/opt/inimigoA.mod";
+                break;
+            case GUN:
+                path = "C:/opt/canhao.mod";
+                break;
+            case VITAMIN:
+                path = "C:/opt/inimigoA.mod";
+                break;
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+
+            List<String> strings = new ArrayList<>();
+            while (reader.ready())
+                strings.add(reader.readLine());
+
+            int i = Integer.valueOf(strings.get(1).split(" ")[1]);
+            List<XY> xyList = new ArrayList<>();
+            for (int j = 2; j < i + 2; j++) {
+                String[] str = strings.get(j).split(" ");
+                float x = Float.valueOf(str[0]) / 100;
+                float y = Float.valueOf(str[1]) / 100;
+                xyList.add(new XY(x, y));
+            }
+
+            reader.close();
+
+            return xyList;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public float getMaxX() {
         return maxX;
