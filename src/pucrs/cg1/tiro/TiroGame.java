@@ -32,9 +32,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
 
     static float gunSpeed = 0.07f;
 
-    static int life = 0;
-
-    static int dificulty = 10;
+    static int life = 3;
 
     static int timeAdd = 500;
     static Timer timerMoveObject;

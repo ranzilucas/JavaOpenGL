@@ -28,6 +28,7 @@ class DrawObject {
 
             if (!f.isInside()) {
                 f.setTx(f.getTXRandom());
+                f.addCountLoop();
                 f.setTy(3f);
             }
                 /*life++;

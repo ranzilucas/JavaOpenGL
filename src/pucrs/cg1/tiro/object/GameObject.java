@@ -25,6 +25,9 @@ public class GameObject implements GameObjectInterface {
     private float green = 0.0f;
     private float blue = 0.0f;
 
+    //conta quantas voltas o objeto deu para aumentar a velocidade
+    private int countLoop = 1;
+
     private GameObjectType form;
 
     public GameObject(GameObjectType type, float tx, float ty, float red, float green, float blue) {
@@ -124,13 +127,12 @@ public class GameObject implements GameObjectInterface {
     }
 
     public void move() {
-        Random random = new Random();
-        ty -= 0.02f * (random.nextInt(100) / 10);
+        ty -= 0.002f + (countLoop * 0.01);
     }
 
     // verifica se objeto esta dentro da janela
     public boolean isInside() {
-        if (ty - maxY < -3.0f)
+        if (ty - maxY < -2.5f)
             return false;
         return true;
     }
@@ -193,4 +195,7 @@ public class GameObject implements GameObjectInterface {
         return form;
     }
 
+    public void addCountLoop() {
+        this.countLoop++;
+    }
 }
