@@ -2,7 +2,6 @@ package pucrs.cg1.tiro;
 
 import com.jogamp.opengl.GL2;
 import pucrs.cg1.tiro.object.GameObject;
-import pucrs.cg1.tiro.object.Gun;
 import pucrs.cg1.tiro.object.XY;
 
 import javax.swing.*;
@@ -15,7 +14,7 @@ import static com.jogamp.opengl.GL.GL_LINE_LOOP;
  */
 class DrawObject {
 
-    public static boolean drawForms(GL2 gl, List<GameObject> gameObjects, Timer timerAddObject, Timer timerMoveObject, Gun gun) {
+    public static boolean drawForms(GL2 gl, List<GameObject> gameObjects, Timer timerAddObject, Timer timerMoveObject, GameObject gun) {
         boolean move = true;
         for (GameObject f : gameObjects) {
             //detecta colisao
@@ -30,9 +29,9 @@ class DrawObject {
             if (!f.isInside()) {
                 f.setTx(f.getTXRandom());
                 f.setTy(3f);
-            }  //gameObjects.remove(f);
-                /*score++;
-                if ((score % dificulty) == 0 && score != 0) {
+            }
+                /*life++;
+                if ((life % dificulty) == 0 && life != 0) {
                     dificulty += 10;
                     TimerActionAddGameObject(-500);
                 }*/
@@ -60,6 +59,12 @@ class DrawObject {
         return false;
     }
 
+    /**
+     * Desenha o objeto passado
+     *
+     * @param gl
+     * @param gun
+     */
     public static void draw(GL2 gl, GameObject gun) {
         gl.glLoadIdentity();
         gl.glColor3f(gun.getRed(), gun.getGreen(), gun.getBlue());

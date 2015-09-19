@@ -6,7 +6,10 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
-import pucrs.cg1.tiro.object.*;
+import pucrs.cg1.tiro.object.GameObject;
+import pucrs.cg1.tiro.object.GameObjectType;
+import pucrs.cg1.tiro.object.RandomObject;
+import pucrs.cg1.tiro.object.XY;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +32,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
 
     static float gunSpeed = 0.07f;
 
-    static int score = 0;
+    static int life = 0;
 
     static int dificulty = 10;
 
@@ -49,16 +52,16 @@ public class TiroGame extends GLCanvas implements GLEventListener {
     static ActionListener actionAddForm = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (gameObjects.size() < 15)
-                gameObjects.add(RandomObject.getObjectRandom());
+                gameObjects.add(RandomObject.getEnemyRandom());
         }
     };
 
-    static private Gun gun;
+    static private GameObject gun;
     private GLU glu;
 
     public TiroGame() {
         this.addGLEventListener(this);
-        gun = new Gun(GameObjectType.GUN, -1, 0f, -2.0f, 0.0f, 0.0f, 1.0f);// Criar o canhao
+        gun = new GameObject(GameObjectType.GUN, 0f, -2.0f, 0.0f, 0.0f, 1.0f);// Criar o canhao
         TimerActionMove(17);
         TimerActionAddGameObject(0);
     }
@@ -112,11 +115,11 @@ public class TiroGame extends GLCanvas implements GLEventListener {
                                 System.exit(0);
                             switch (key.getKeyCode()) {
                                 case 37:// Left
-                                    if (gun.getTx() > -2.8f)
+                                    if (-gun.getMaxY() + gun.getTx() > -3f)
                                         gun.setTx(gun.getTx() - gunSpeed);
                                     break;
                                 case 39:// Right
-                                    if (gun.getTx() < 2.8f)
+                                    if (gun.getMinX() + gun.getTx() < 3f)
                                         gun.setTx(gun.getTx() + gunSpeed);
                                     break;
                                 default:
@@ -178,7 +181,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         DrawObject.drawForms(gl, gameObjects, timerAddObject, timerMoveObject, gun);
 
         // Desenha Score
-        DrawScenario.drawScore(score);
+        DrawScenario.drawLife(life);
     }
 
     // inicia as variaveis opengl e gluOrtho

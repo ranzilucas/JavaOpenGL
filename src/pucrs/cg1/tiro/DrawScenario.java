@@ -23,11 +23,11 @@ class DrawScenario {
         gl.glEnd();
     }
 
-    public static void drawScore(int score) {
+    public static void drawLife(int life) {
         renderer = new TextRenderer(new Font("SansSerif", Font.BOLD, 25));
         renderer.beginRendering(850, 850);
         renderer.setColor(1.0f, 0.2f, 0.2f, 0.8f);
-        renderer.draw("Score: " + score, 700, 800);
+        renderer.draw("Life: " + life, 700, 800);
         renderer.endRendering();
     }
 

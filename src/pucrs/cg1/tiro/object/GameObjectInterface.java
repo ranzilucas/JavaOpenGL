@@ -19,8 +19,6 @@ public interface GameObjectInterface {
 
     float getBlue();
 
-    int getDestiny();
-
     GameObjectType getForm();
 
 }
