@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface GameObjectInterface {
 
-    List<XY> getXy();
+    List<Cordenada> getCordenada();
 
     float getTx();
 

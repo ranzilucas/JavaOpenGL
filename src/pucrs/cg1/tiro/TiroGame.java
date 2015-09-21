@@ -9,13 +9,11 @@ import com.jogamp.opengl.util.FPSAnimator;
 import pucrs.cg1.tiro.object.GameObject;
 import pucrs.cg1.tiro.object.GameObjectType;
 import pucrs.cg1.tiro.object.RandomObject;
-import pucrs.cg1.tiro.object.XY;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
@@ -29,6 +27,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
     private static final int FPS = 60;
 
     static ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    static ArrayList<GameObject> bullets = new ArrayList<>();
 
     static float gunSpeed = 0.07f;
 
@@ -43,7 +42,9 @@ public class TiroGame extends GLCanvas implements GLEventListener {
     static ActionListener actionMove = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             for (int i = 0; i < gameObjects.size(); i++)
-                gameObjects.get(i).move();
+                gameObjects.get(i).moveUp();
+            for (GameObject bullet : bullets)
+                bullet.moveDown();
         }
     };
 
@@ -112,6 +113,9 @@ public class TiroGame extends GLCanvas implements GLEventListener {
                             if (key.getKeyCode() == 27)
                                 System.exit(0);
                             switch (key.getKeyCode()) {
+                                case 65:
+                                    bullets.add(new GameObject(GameObjectType.BULLET, gun.getTx(), gun.getTy(), 1, 1, 1));
+                                    break;
                                 case 37:// Left
                                     if (-gun.getMaxY() + gun.getTx() > -3f)
                                         gun.setTx(gun.getTx() - gunSpeed);
@@ -151,22 +155,12 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         timerAddObject.start();
     }
 
-    public List<XY> getPositions() {
-        List<XY> xyList = new ArrayList<XY>();
-
-        xyList.add(new XY(0.2f, 0f));
-        xyList.add(new XY(0.2f, 0.2f));
-        xyList.add(new XY(-0.2f, 0.2f));
-        xyList.add(new XY(-0.2f, 0f));
-        return xyList;
-    }
-
     @Override
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2(); // get the OpenGL 2 graphics context
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color
 
-        // Linha XY
+        // Linha Cordenada
         gl.glLoadIdentity();
         gl.glColor3f(1.0f, 1.0f, 1.0f);
         gl.glTranslatef(0.0f, 0.0f, -6.0f);
@@ -175,8 +169,35 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         // Desenha canhao;
         DrawObject.draw(gl, gun);
 
+        //desenha tiros
+        for (GameObject bullet : bullets) {
+            DrawObject.drawBullet(gl, bullet);
+        }
+
         // Desenha objetos obstaculos
-        DrawObject.drawForms(gl, gameObjects, timerAddObject, timerMoveObject, gun);
+        for (GameObject gameObject : gameObjects) {
+            if (DrawObject.isColisionObject(gun, gameObject)) {
+                if (life == 0) {
+                    timerMoveObject.stop();
+                    timerAddObject.stop();
+                    DrawScenario.drawGameOver();
+                    move = false;
+                } else {
+                    life--;
+                    gameObject.setTx(gameObject.getTXRandom());
+                    gameObject.addCountLoop();
+                    gameObject.setTy(3f);
+                }
+            }
+
+            if (!gameObject.isInside()) {
+                gameObject.setTx(gameObject.getTXRandom());
+                gameObject.addCountLoop();
+                gameObject.setTy(3f);
+            }
+
+            DrawObject.draw(gl, gameObject);
+        }
 
         // Desenha Score
         DrawScenario.drawLife(life);

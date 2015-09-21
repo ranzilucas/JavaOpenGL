@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -13,7 +14,7 @@ import java.util.Random;
  */
 public class GameObject implements GameObjectInterface {
 
-    private List<XY> xy;
+    private List<Cordenada> cordenada;
 
     private float maxX, maxY, minX, minY;
 
@@ -37,11 +38,14 @@ public class GameObject implements GameObjectInterface {
         this.green = green;
         this.blue = blue;
         this.form = type;
-        this.xy = getPositionsXY(type);
+        this.cordenada = getPositionsXY(type);
         getMaxMin();
     }
 
-    public static List<XY> getPositionsXY(GameObjectType type) {
+    public static List<Cordenada> getPositionsXY(GameObjectType type) {
+        if (type == GameObjectType.BULLET) {
+            return Arrays.asList(new Cordenada[]{new Cordenada(0, 0), new Cordenada(0f, 0.1f)});
+        }
         String path = null;
         switch (type) {
             case ENEMYA:
@@ -71,17 +75,17 @@ public class GameObject implements GameObjectInterface {
                 strings.add(reader.readLine());
 
             int i = Integer.valueOf(strings.get(1).split(" ")[1]);
-            List<XY> xyList = new ArrayList<>();
+            List<Cordenada> cordenadaList = new ArrayList<>();
             for (int j = 2; j < i + 2; j++) {
                 String[] str = strings.get(j).split(" ");
                 float x = Float.valueOf(str[0]) / 100;
                 float y = Float.valueOf(str[1]) / 100;
-                xyList.add(new XY(x, y));
+                cordenadaList.add(new Cordenada(x, y));
             }
 
             reader.close();
 
-            return xyList;
+            return cordenadaList;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -96,7 +100,7 @@ public class GameObject implements GameObjectInterface {
         maxX = 0f;
         minY = 0f;
         minX = 0f;
-        for (XY v : getXy()) {
+        for (Cordenada v : getCordenada()) {
             if (v.getX() < maxX)
                 maxX = v.getX();
             if (v.getY() > maxY)
@@ -126,8 +130,12 @@ public class GameObject implements GameObjectInterface {
         return x;
     }
 
-    public void move() {
+    public void moveUp() {
         ty -= 0.002f + (countLoop * 0.01);
+    }
+
+    public void moveDown() {
+        ty += 0.002f + (countLoop * 0.01);
     }
 
     // verifica se objeto esta dentro da janela
@@ -153,8 +161,8 @@ public class GameObject implements GameObjectInterface {
         return minY;
     }
 
-    public List<XY> getXy() {
-        return xy;
+    public List<Cordenada> getCordenada() {
+        return cordenada;
     }
 
     @Override

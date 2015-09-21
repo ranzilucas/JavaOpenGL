@@ -3,12 +3,12 @@ package pucrs.cg1.tiro.object;
 /**
  * Created by Lucas on 17/09/2015.
  */
-public class XY {
+public class Cordenada {
 
     private float x;
     private float y;
 
-    public XY(float x, float y) {
+    public Cordenada(float x, float y) {
         this.x = x;
         this.y = y;
     }

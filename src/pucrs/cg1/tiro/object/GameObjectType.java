@@ -7,6 +7,8 @@ public enum GameObjectType {
     ENEMYC,
     ENEMYD,
     VITAMIN,
+    BULLET,
     GUN;
+
 
 }
