@@ -49,22 +49,22 @@ public class GameObject implements GameObjectInterface {
         String path = null;
         switch (type) {
             case ENEMYA:
-                path = "C:/opt/inimigoA.mod";
+                path = "src/pucrs/cg1/tiro/resources/inimigoA.mod";
                 break;
             case ENEMYB:
-                path = "C:/opt/inimigoA.mod";
+                path = "src/pucrs/cg1/tiro/resources/inimigoA.mod";
                 break;
             case ENEMYC:
-                path = "C:/opt/inimigoA.mod";
+                path = "src/pucrs/cg1/tiro/resources/inimigoA.mod";
                 break;
             case ENEMYD:
-                path = "C:/opt/inimigoA.mod";
+                path = "src/pucrs/cg1/tiro/resources/inimigoA.mod";
                 break;
             case GUN:
-                path = "C:/opt/canhao.mod";
+                path = "src/pucrs/cg1/tiro/resources/canhao.mod";
                 break;
             case VITAMIN:
-                path = "C:/opt/inimigoA.mod";
+                path = "src/pucrs/cg1/tiro/resources/vitamina.mod";
                 break;
         }
         try {
