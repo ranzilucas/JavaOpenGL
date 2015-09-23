@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
@@ -116,7 +117,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
                                 System.exit(0);
                             switch (key.getKeyCode()) {
                                 case 65:
-                                    bullets.add(new GameObject(GameObjectType.BULLET, gun.getTx(), gun.getTy()+ gun.getMaxY(), 1, 1, 1));
+                                    bullets.add(new GameObject(GameObjectType.BULLET, gun.getTx(), gun.getTy() + gun.getMaxY(), 1, 1, 1));
                                     break;
                                 case 37:// Left
                                     if (-gun.getMaxY() + gun.getTx() > -3f)
@@ -171,6 +172,20 @@ public class TiroGame extends GLCanvas implements GLEventListener {
 
         // Desenha canhao;
         drawObject.draw(gun);
+
+
+        Iterator<GameObject> iterB = bullets.iterator();
+        Iterator<GameObject> iterE = gameObjects.iterator();
+        while (iterB.hasNext()) {
+            GameObject bullet = iterB.next();
+            while (iterE.hasNext()) {
+                GameObject enemy = iterE.next();
+                if (drawObject.isColisionObject(bullet, enemy)) {
+                    iterE.remove();
+                    iterB.remove();
+                }
+            }
+        }
 
         //desenha tiros
         bullets = drawObject.drawBullets(bullets);

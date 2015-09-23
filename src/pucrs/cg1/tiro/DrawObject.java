@@ -23,7 +23,7 @@ class DrawObject {
 
     // Detecta colisão do circulo jogador com objeto
     public boolean isColisionObject(GameObject gun, GameObject f) {
-        if (f.getTy() < 0)
+        if (f.getTy() < 0) {
             if (f.getTx() > 0 && gun.getTx() > 0) {
                 if (f.getMaxX() + f.getTx() < gun.getMinX() + gun.getTx() && gun.getMaxX() + gun.getTx() < f.getMinX() + f.getTx())
                     if (-f.getMaxY() + f.getTy() < -gun.getMinY() + gun.getTy() && -gun.getMaxY() + gun.getTy() < -f.getMinY() + f.getTy())
@@ -34,6 +34,18 @@ class DrawObject {
                     if (-f.getMaxY() + f.getTy() < -gun.getMinY() + gun.getTy() && -gun.getMaxY() + gun.getTy() < -f.getMinY() + f.getTy())
                         return true;
             }
+        } else {
+            if (f.getTx() > 0 && gun.getTx() > 0) {
+                if (f.getMaxX() + f.getTx() < gun.getMinX() + gun.getTx() && gun.getMaxX() + gun.getTx() < f.getMinX() + f.getTx())
+                    if (f.getMaxY() + f.getTy() < gun.getMinY() + gun.getTy() && gun.getMaxY() + gun.getTy() < f.getMinY() + f.getTy())
+                        return true;
+
+            } else if (f.getTx() < 0 && gun.getTx() < 0) {
+                if (-f.getMaxX() + f.getTx() > -gun.getMinX() + gun.getTx() && -gun.getMaxX() + gun.getTx() > -f.getMinX() + f.getTx())
+                    if (f.getMaxY() + f.getTy() < gun.getMinY() + gun.getTy() && gun.getMaxY() + gun.getTy() < f.getMinY() + f.getTy())
+                        return true;
+            }
+        }
 
         return false;
     }
@@ -55,9 +67,10 @@ class DrawObject {
 
     /**
      * Desenha os tiros
+     *
      * @param bullet
      */
-    private void drawBullet(GameObject bullet){
+    private void drawBullet(GameObject bullet) {
         gl.glLoadIdentity();
         gl.glColor3f(bullet.getRed(), bullet.getGreen(), bullet.getBlue());
         gl.glTranslatef(bullet.getTx(), bullet.getTy(), -6.0f);
@@ -69,17 +82,19 @@ class DrawObject {
 
     /**
      * Calcula se pode ou nao desenhar e desenha os tiros
+     *
      * @param bullets
      * @return
      */
     public ArrayList<GameObject> drawBullets(ArrayList<GameObject> bullets) {
         List<GameObject> list = new ArrayList<>();
-        for(GameObject object : bullets){
-            if(object.isInside()){
+        for (GameObject object : bullets) {
+            if (object.isInside()) {
                 drawBullet(object);
                 list.add(object);
             }
         }
         return (ArrayList<GameObject>) list;
     }
+
 }
