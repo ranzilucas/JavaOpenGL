@@ -130,11 +130,11 @@ public class GameObject implements GameObjectInterface {
         return x;
     }
 
-    public void moveUp() {
+    public void moveDown() {
         ty -= 0.002f + (countLoop * 0.01);
     }
 
-    public void moveDown() {
+    public void moveUp() {
         ty += 0.002f + (countLoop * 0.01);
     }
 

@@ -42,9 +42,10 @@ public class TiroGame extends GLCanvas implements GLEventListener {
     static ActionListener actionMove = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             for (int i = 0; i < gameObjects.size(); i++)
-                gameObjects.get(i).moveUp();
+                gameObjects.get(i).moveDown();
             for (GameObject bullet : bullets)
-                bullet.moveDown();
+                if (bullet != null)
+                    bullet.moveUp();
         }
     };
 
@@ -114,7 +115,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
                                 System.exit(0);
                             switch (key.getKeyCode()) {
                                 case 65:
-                                    bullets.add(new GameObject(GameObjectType.BULLET, gun.getTx(), gun.getTy(), 1, 1, 1));
+                                    bullets.add(new GameObject(GameObjectType.BULLET, gun.getTx(), gun.getTy()+ gun.getMaxY(), 1, 1, 1));
                                     break;
                                 case 37:// Left
                                     if (-gun.getMaxY() + gun.getTx() > -3f)
@@ -164,14 +165,23 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         gl.glLoadIdentity();
         gl.glColor3f(1.0f, 1.0f, 1.0f);
         gl.glTranslatef(0.0f, 0.0f, -6.0f);
+
         DrawScenario.drawLines(gl);
 
         // Desenha canhao;
         DrawObject.draw(gl, gun);
 
         //desenha tiros
-        for (GameObject bullet : bullets) {
-            DrawObject.drawBullet(gl, bullet);
+        for (int i = 0; i < bullets.size(); i++) {
+            GameObject ob = bullets.get(i);
+            if (ob != null) {
+                //verifica se nao saiu da tela
+                if (ob.getTy() > 2.0f) {
+                    bullets.remove(i);
+                }else{
+                    DrawObject.drawBullet(gl, ob);
+                }
+            }
         }
 
         // Desenha objetos obstaculos
@@ -190,7 +200,8 @@ public class TiroGame extends GLCanvas implements GLEventListener {
                 }
             }
 
-            if (!gameObject.isInside()) {
+            //verifica se nao saiu da tela
+            if (gameObject.getTy() < -2.0f) {
                 gameObject.setTx(gameObject.getTXRandom());
                 gameObject.addCountLoop();
                 gameObject.setTy(3f);
