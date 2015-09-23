@@ -58,6 +58,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
 
     static private GameObject gun;
     private GLU glu;
+    private DrawObject drawObject;
 
     public TiroGame() {
         this.addGLEventListener(this);
@@ -169,24 +170,14 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         DrawScenario.drawLines(gl);
 
         // Desenha canhao;
-        DrawObject.draw(gl, gun);
+        drawObject.draw(gun);
 
         //desenha tiros
-        for (int i = 0; i < bullets.size(); i++) {
-            GameObject ob = bullets.get(i);
-            if (ob != null) {
-                //verifica se nao saiu da tela
-                if (ob.getTy() > 2.0f) {
-                    bullets.remove(i);
-                }else{
-                    DrawObject.drawBullet(gl, ob);
-                }
-            }
-        }
+        bullets = drawObject.drawBullets(bullets);
 
         // Desenha objetos obstaculos
         for (GameObject gameObject : gameObjects) {
-            if (DrawObject.isColisionObject(gun, gameObject)) {
+            if (drawObject.isColisionObject(gun, gameObject)) {
                 if (life == 0) {
                     timerMoveObject.stop();
                     timerAddObject.stop();
@@ -207,7 +198,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
                 gameObject.setTy(3f);
             }
 
-            DrawObject.draw(gl, gameObject);
+            drawObject.draw(gameObject);
         }
 
         // Desenha Score
@@ -223,6 +214,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         gl.glMatrixMode(GL_PROJECTION);
         glu.gluOrtho2D(-1f, 1f, -1f, 1f);
         gl.glMatrixMode(GL_MODELVIEW);
+        drawObject = new DrawObject(gl);
     }
 
     @Override

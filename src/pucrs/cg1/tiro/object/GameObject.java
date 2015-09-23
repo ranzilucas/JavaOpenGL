@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * Created by Lucas on 17/09/2015.
  */
-public class GameObject implements GameObjectInterface {
+public class GameObject implements GameObjectInterface{
 
     private List<Cordenada> cordenada;
 
@@ -140,7 +140,7 @@ public class GameObject implements GameObjectInterface {
 
     // verifica se objeto esta dentro da janela
     public boolean isInside() {
-        if (ty - maxY < -2.5f)
+        if ((ty < 0 && ty - maxY < -2.5f) || (ty > 0 && ty + minY > 2f))
             return false;
         return true;
     }
