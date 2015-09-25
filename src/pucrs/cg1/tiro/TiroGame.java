@@ -175,13 +175,11 @@ public class TiroGame extends GLCanvas implements GLEventListener {
 
 
         Iterator<GameObject> iterB = bullets.iterator();
-        Iterator<GameObject> iterE = gameObjects.iterator();
         while (iterB.hasNext()) {
             GameObject bullet = iterB.next();
-            while (iterE.hasNext()) {
-                GameObject enemy = iterE.next();
+            for (GameObject enemy : gameObjects){
                 if (drawObject.isColisionObject(bullet, enemy)) {
-                    iterE.remove();
+                    enemy.setStatus(false);
                     iterB.remove();
                 }
             }
@@ -192,6 +190,7 @@ public class TiroGame extends GLCanvas implements GLEventListener {
 
         // Desenha objetos obstaculos
         for (GameObject gameObject : gameObjects) {
+            if (!gameObject.isStatus()) continue;
             if (drawObject.isColisionObject(gun, gameObject)) {
                 if (life == 0) {
                     timerMoveObject.stop();

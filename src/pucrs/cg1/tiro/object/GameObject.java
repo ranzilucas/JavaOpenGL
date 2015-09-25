@@ -14,6 +14,7 @@ import java.util.Random;
  */
 public class GameObject implements GameObjectInterface{
 
+    private boolean status = true;
     private List<Cordenada> cordenada;
 
     private float maxX, maxY, minX, minY;
@@ -93,6 +94,14 @@ public class GameObject implements GameObjectInterface{
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     private void getMaxMin() {
