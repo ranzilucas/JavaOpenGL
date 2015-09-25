@@ -97,4 +97,11 @@ class DrawObject {
         return (ArrayList<GameObject>) list;
     }
 
+    public boolean isColisionObjectList(ArrayList<GameObject> bullets, GameObject gameObject) {
+        for (GameObject b : bullets)
+            if (isColisionObject(b, gameObject)) {
+                return true;
+            }
+        return false;
+    }
 }

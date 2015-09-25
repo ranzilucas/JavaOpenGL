@@ -14,7 +14,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
@@ -173,24 +172,25 @@ public class TiroGame extends GLCanvas implements GLEventListener {
         // Desenha canhao;
         drawObject.draw(gun);
 
-
-        Iterator<GameObject> iterB = bullets.iterator();
-        while (iterB.hasNext()) {
-            GameObject bullet = iterB.next();
-            for (GameObject enemy : gameObjects){
-                if (drawObject.isColisionObject(bullet, enemy)) {
-                    enemy.setStatus(false);
-                    iterB.remove();
-                }
-            }
-        }
-
         //desenha tiros
         bullets = drawObject.drawBullets(bullets);
 
+        int count = 0;
         // Desenha objetos obstaculos
         for (GameObject gameObject : gameObjects) {
-            if (!gameObject.isStatus()) continue;
+            if (!gameObject.isStatus()) {
+                count++;
+                continue;
+            }
+            if (count > 11) {
+                timerMoveObject.stop();
+                timerAddObject.stop();
+                DrawScenario.drawGameWin();
+                move = false;
+            }
+            if (drawObject.isColisionObjectList(bullets, gameObject)) {
+                gameObject.setStatus(false);
+            }
             if (drawObject.isColisionObject(gun, gameObject)) {
                 if (life == 0) {
                     timerMoveObject.stop();

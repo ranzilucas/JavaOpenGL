@@ -39,4 +39,11 @@ class DrawScenario {
         renderer.endRendering();
     }
 
+    public static void drawGameWin() {
+        renderer = new TextRenderer(new Font("SansSerif", Font.BOLD, 40));
+        renderer.beginRendering(850, 850);
+        renderer.setColor(1f, 1f, 1f, 1f);
+        renderer.draw("WIN", 320, 425);
+        renderer.endRendering();
+    }
 }
